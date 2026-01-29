@@ -1,0 +1,88 @@
+┌──────────────┐
+│    users     │
+├──────────────┤
+│ pkUserId (PK)│
+│ firstName    │
+│ mobileNumber │
+│ password     │
+│ isActive     │
+│ createdAt   │
+└───────┬──────┘
+        │ 1
+        │
+        │ M
+┌───────▼──────┐
+│     bets     │   (OPTIONAL)
+├──────────────┤
+│ pkBetId (PK) │
+│ fkUserId (FK)│───► users.pkUserId
+│ fkGameId (FK)│───► games.pkGameId
+│ gameDate     │
+│ betNumber    │
+│ amount       │
+│ createdAt   │
+└──────────────┘
+
+
+┌──────────────┐
+│    games     │
+├──────────────┤
+│ pkGameId (PK)│
+│ gameCode     │
+│ gameName     │
+│ gameIcon     │
+│ description  │
+│ holiday      │
+│ isActive     │
+│ isMaster     │
+│ fkMasterId   │───┐ self-reference
+└───────┬──────┘   │
+        │ 1        │
+        │          │
+        │ M        │
+┌───────▼──────────▼───────┐
+│       game_timings        │
+├──────────────────────────┤
+│ pkTimingId (PK)           │
+│ fkGameId (FK)             │──► games.pkGameId
+│ startTime                 │
+│ endTime                   │
+│ resultTime                │
+│ startDayDiff              │
+│ endDayDiff                │
+└──────────────────────────┘
+
+
+┌──────────────────────────┐
+│       game_results        │
+├──────────────────────────┤
+│ pkResultId (PK)           │
+│ fkGameId (FK)             │──► games.pkGameId
+│ gameDate                  │
+│ result                    │
+│ previousResult            │
+└──────────────────────────┘
+
+
+┌──────────────────────────┐
+│        game_states        │
+├──────────────────────────┤
+│ pkStateId (PK)            │
+│ fkGameId (FK)             │──► games.pkGameId
+│ gameDate                  │
+│ gameState                 │
+│ showInLive                │
+│ showInPending             │
+│ showInDeclared            │
+│ showInUpcoming            │
+└──────────────────────────┘
+
+
+┌──────────────────────────┐
+│       game_calendar       │
+├──────────────────────────┤
+│ pkCalendarId (PK)         │
+│ fkGameId (FK)             │──► games.pkGameId
+│ gameDate                  │
+│ isHoliday                 │
+└──────────────────────────┘

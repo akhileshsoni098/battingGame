@@ -7,9 +7,10 @@ const MIGRATIONS = [
   "01migrations_table.sql",
 
   "users/02users.sql",
-
+  "admin/03admin.sql",
+  "admin/04games.sql",
 ];
-   
+
 async function runMigrations() {
   const db = await connectDB();
 
@@ -31,7 +32,7 @@ async function runMigrations() {
 
     const [rows] = await db.query(
       "SELECT 1 FROM migrations WHERE filename = ?",
-      [relativePath]
+      [relativePath],
     );
 
     if (rows.length) {
@@ -42,10 +43,9 @@ async function runMigrations() {
     const sql = fs.readFileSync(fullPath, "utf8");
 
     await db.query(sql);
-    await db.query(
-      "INSERT INTO migrations (filename) VALUES (?)",
-      [relativePath]
-    );
+    await db.query("INSERT INTO migrations (filename) VALUES (?)", [
+      relativePath,
+    ]);
 
     console.log("✅ Applied:", relativePath);
   }
