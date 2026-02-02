@@ -62,7 +62,7 @@
 
 
 ┌──────────────────────────┐
-│       game_results        │
+│       game_results        │  Pending  now ...
 ├──────────────────────────┤
 │ pkResultId (PK)           │
 │ fkGameId (FK)             │──► games.pkGameId
@@ -73,7 +73,7 @@
 
 
 ┌──────────────────────────┐
-│        game_states        │
+│        game_states        │  //in progress 
 ├──────────────────────────┤
 │ pkStateId (PK)            │
 │ fkGameId (FK)             │──► games.pkGameId
@@ -87,7 +87,7 @@
 
 
 ┌──────────────────────────┐
-│       game_calendar       │
+│       game_calendar       │  // pending 
 ├──────────────────────────┤
 │ pkCalendarId (PK)         │
 │ fkGameId (FK)             │──► games.pkGameId

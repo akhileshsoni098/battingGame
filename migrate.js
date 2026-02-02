@@ -9,6 +9,7 @@ const MIGRATIONS = [
   "users/02users.sql",
   "admin/03admin.sql",
   "admin/04games.sql",
+  "admin/05game_timing.sql",
 ];
 
 async function runMigrations() {
