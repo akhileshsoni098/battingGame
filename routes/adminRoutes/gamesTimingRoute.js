@@ -1,4 +1,5 @@
-const exoress = require("express");
+const express = require("express");
+
 const {
   adminAuthentication,
   adminAuthorization,
@@ -12,28 +13,28 @@ const {
   updateGameTiming,
 } = require("../../controllers/adminControllers/adminGameTimingsCtrl");
 
-const router = exoress.Router();
+const router = express.Router();
 
-// createGames
+// create Game timing
 
 router
   .route("/:gameId")
   .post(adminAuthentication, adminAuthorization, createGameTiming);
 
-// get List of Games
+// get List of Game timing
 router.route("/").get(adminAuthentication, adminAuthorization, getGameTimings);
 
-// get Single of Games
+// get Single of Game timing
 router
   .route("/:timingId")
   .get(adminAuthentication, adminAuthorization, getGameTimingById);
 
-// update Game
+// update Game timing
 router
   .route("/:timingId")
   .put(adminAuthentication, adminAuthorization, updateGameTiming);
 
-// delete Game
+// delete Game timing
 router
   .route("/:timingId")
   .delete(adminAuthentication, adminAuthorization, deleteGameTiming);

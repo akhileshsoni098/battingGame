@@ -7,10 +7,16 @@ const gamesRoute = require("../routes/adminRoutes/gamesRoute");
 
 const game_timingsRoute = require("../routes/adminRoutes/gamesTimingRoute");
 
+const adminStatesRoute = require("../routes/adminRoutes/adminStatesRoute");
+
+//////////////////////////////////////////////
+
 admin.use("/admin", adminAuth);
 
 admin.use("/admin/games", gamesRoute);
 
 admin.use("/admin/game-timings", game_timingsRoute);
+
+admin.use("/admin/game-states", adminStatesRoute);
 
 module.exports = admin;
