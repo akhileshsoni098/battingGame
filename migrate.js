@@ -11,6 +11,7 @@ const MIGRATIONS = [
   "admin/04games.sql",
   "admin/05game_timing.sql",
   "admin/06gamestates.sql",
+  "admin/07gameCalender.sql",
 ];
 
 async function runMigrations() {

@@ -33,7 +33,7 @@
 
 
 ┌──────────────┐
-│    games     │
+│    games     │   // done
 ├──────────────┤
 │ pkGameId (PK)│
 │ gameCode     │
@@ -49,7 +49,7 @@
         │          │
         │ M        │
 ┌───────▼──────────▼───────┐
-│       game_timings        │
+│       game_timings        │   // done
 ├──────────────────────────┤
 │ pkTimingId (PK)           │
 │ fkGameId (FK)             │──► games.pkGameId
@@ -73,7 +73,7 @@
 
 
 ┌──────────────────────────┐
-│        game_states        │  //in progress 
+│        game_states        │  //done
 ├──────────────────────────┤
 │ pkStateId (PK)            │
 │ fkGameId (FK)             │──► games.pkGameId
@@ -87,7 +87,7 @@
 
 
 ┌──────────────────────────┐
-│       game_calendar       │  // pending 
+│       game_calendar       │  // working 
 ├──────────────────────────┤
 │ pkCalendarId (PK)         │
 │ fkGameId (FK)             │──► games.pkGameId
