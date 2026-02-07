@@ -1,4 +1,3 @@
-
 const validStates = ["Upcoming", "Live", "Pending", "Declared", "Closed"];
 
 // Mapping to flags (kept for backward-compatibility)
@@ -42,8 +41,6 @@ function isValidDateYYYYMMDD(d) {
   return !isNaN(dt.getTime());
 }
 
-// need to read this code 
-
 // ======================= create game States =========================
 exports.createGameStates = async (req, res) => {
   try {
@@ -63,31 +60,24 @@ exports.createGameStates = async (req, res) => {
     }
 
     if (!gameDate || !gameState) {
-      return res
-        .status(400)
-        .json({
-          status: false,
-          message: "please provide all required fields: gameDate, gameState",
-        });
+      return res.status(400).json({
+        status: false,
+        message: "please provide all required fields: gameDate, gameState",
+      });
     }
 
     if (!isValidDateYYYYMMDD(gameDate)) {
-      return res
-        .status(400)
-        .json({
-          status: false,
-          message: "please provide valid date in YYYY-MM-DD format",
-        });
+      return res.status(400).json({
+        status: false,
+        message: "please provide valid date in YYYY-MM-DD format",
+      });
     }
 
-    
     if (!validStates.includes(gameState)) {
-      return res
-        .status(400)
-        .json({
-          status: false,
-          message: `please provide valid game state. allowed: ${validStates.join(", ")}`,
-        });
+      return res.status(400).json({
+        status: false,
+        message: `please provide valid game state. allowed: ${validStates.join(", ")}`,
+      });
     }
 
     // check game exists
@@ -117,12 +107,10 @@ exports.createGameStates = async (req, res) => {
       [gameId, gameDate],
     );
     if (checkDuplicate.length > 0) {
-      return res
-        .status(409)
-        .json({
-          status: false,
-          message: "game state for this game on this date already exists",
-        });
+      return res.status(409).json({
+        status: false,
+        message: "game state for this game on this date already exists",
+      });
     }
 
     // prepare flags from state
@@ -204,21 +192,17 @@ exports.updateGameStates = async (req, res) => {
 
     // validate incoming gameState if provided
     if (gameState && !validStates.includes(gameState)) {
-      return res
-        .status(400)
-        .json({
-          status: false,
-          message: `please provide valid game state. allowed: ${validStates.join(", ")}`,
-        });
+      return res.status(400).json({
+        status: false,
+        message: `please provide valid game state. allowed: ${validStates.join(", ")}`,
+      });
     }
 
     if (gameDate && !isValidDateYYYYMMDD(gameDate)) {
-      return res
-        .status(400)
-        .json({
-          status: false,
-          message: "please provide valid date in YYYY-MM-DD format",
-        });
+      return res.status(400).json({
+        status: false,
+        message: "please provide valid date in YYYY-MM-DD format",
+      });
     }
 
     // if updating date, check holiday override for that new date
@@ -239,12 +223,10 @@ exports.updateGameStates = async (req, res) => {
       [gameId, finalGameDate, stateId],
     );
     if (checkDuplicate.length > 0) {
-      return res
-        .status(409)
-        .json({
-          status: false,
-          message: "game state for this game on this date already exists",
-        });
+      return res.status(409).json({
+        status: false,
+        message: "game state for this game on this date already exists",
+      });
     }
 
     // compute flags: if client provided explicit flags and NOT changing state, use provided;
@@ -395,3 +377,4 @@ exports.deleteGameStates = async (req, res) => {
     return res.status(500).json({ status: false, message: err.message });
   }
 };
+

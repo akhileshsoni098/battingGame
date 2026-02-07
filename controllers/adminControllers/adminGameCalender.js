@@ -2,7 +2,7 @@
 
 exports.createGameCalendar = async (req, res) => {
   try {
-    const gameId = req.params.gameId;
+    let gameId = req.params.gameId;
     let { gameDate, isHoliday } = req.body;
 
     if (!gameId) {
@@ -35,7 +35,7 @@ exports.createGameCalendar = async (req, res) => {
 
       isHoliday = isHoliday ? 1 : 0;
     } else {
-      isHoliday = 0; 
+      isHoliday = 0;
     }
     const [existingCalendar] = await global.db.query(
       "SELECT * FROM game_calendar WHERE gameId = ? AND gameDate = ?",

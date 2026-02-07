@@ -6,7 +6,10 @@ const {
   updateGameCalendar,
   deleteGameCalendar,
 } = require("../../controllers/adminControllers/adminGameCalender");
-const { adminAuthorization, adminAuthentication } = require("../../middlewares/adminAuth");
+const {
+  adminAuthorization,
+  adminAuthentication,
+} = require("../../middlewares/adminAuth");
 
 router = express.Router();
 
@@ -28,7 +31,7 @@ router
 router
   .route("/:calendarId")
   .put(adminAuthentication, adminAuthorization, updateGameCalendar);
-  
+
 //=================== delete Game Calendar ================
 router
   .route("/:calendarId")
