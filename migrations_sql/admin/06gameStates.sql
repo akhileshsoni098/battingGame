@@ -17,4 +17,5 @@ FOREIGN KEY (gameId) REFERENCES games(id)
  ON UPDATE CASCADE
 );
 
-
+CREATE INDEX idx_states_game_date 
+ON game_states(gameId, gameDate);

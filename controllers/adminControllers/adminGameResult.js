@@ -29,10 +29,9 @@ exports.createGameResult = async (req, res) => {
     }
 
     // check game exists
-    const [game] = await global.db.query(
-      "SELECT id FROM games WHERE id = ?",
-      [gameId]
-    );
+    const [game] = await global.db.query("SELECT id FROM games WHERE id = ?", [
+      gameId,
+    ]);
 
     if (game.length === 0) {
       return res.status(404).json({
@@ -43,8 +42,8 @@ exports.createGameResult = async (req, res) => {
 
     // duplicate check
     const [existing] = await global.db.query(
-      "SELECT pkResultId FROM game_results WHERE gameId = ? AND gameDate = ?",
-      [gameId, gameDate]
+      "SELECT resultId FROM game_results WHERE gameId = ? AND gameDate = ?",
+      [gameId, gameDate],
     );
 
     if (existing.length > 0) {
@@ -60,7 +59,7 @@ exports.createGameResult = async (req, res) => {
        WHERE gameId = ?
        ORDER BY gameDate DESC
        LIMIT 1`,
-      [gameId]
+      [gameId],
     );
 
     const previousResult = prev.length ? prev[0].result : null;
@@ -69,7 +68,7 @@ exports.createGameResult = async (req, res) => {
       `INSERT INTO game_results
        (gameId, gameDate, result, previousResult)
        VALUES (?, ?, ?, ?)`,
-      [gameId, gameDate, result, previousResult]
+      [gameId, gameDate, result, previousResult],
     );
 
     return res.status(201).json({
@@ -84,7 +83,6 @@ exports.createGameResult = async (req, res) => {
     });
   }
 };
-
 
 // ================================ update ===============================
 
@@ -134,8 +132,8 @@ exports.updateGameResult = async (req, res) => {
     const [updateResult] = await global.db.query(
       `UPDATE game_results 
        SET ${updateFields.join(", ")}
-       WHERE pkResultId = ?`,
-      updateValues
+       WHERE resultId = ?`,
+      updateValues,
     );
 
     if (updateResult.affectedRows === 0) {
@@ -156,7 +154,6 @@ exports.updateGameResult = async (req, res) => {
     });
   }
 };
-
 
 // ======================= get game result by id =========================
 
@@ -184,8 +181,8 @@ exports.getGameResultById = async (req, res) => {
       `SELECT gr.*, g.gameName, g.gameCode
        FROM game_results gr
        JOIN games g ON gr.gameId = g.id
-       WHERE gr.pkResultId = ?`,
-      [resultId]
+       WHERE gr.resultId = ?`,
+      [resultId],
     );
 
     if (result.length === 0) {
@@ -207,8 +204,6 @@ exports.getGameResultById = async (req, res) => {
   }
 };
 
-
-
 // ======================= get all game results =========================
 
 exports.getGameResults = async (req, res) => {
@@ -217,7 +212,7 @@ exports.getGameResults = async (req, res) => {
       `SELECT gr.*, g.gameName, g.gameCode
        FROM game_results gr
        JOIN games g ON gr.gameId = g.id
-       ORDER BY gr.gameDate DESC`
+       ORDER BY gr.gameDate DESC`,
     );
 
     return res.status(200).json({
@@ -231,7 +226,6 @@ exports.getGameResults = async (req, res) => {
     });
   }
 };
-
 
 // ======================= delete game result =========================
 
@@ -256,8 +250,8 @@ exports.deleteGameResult = async (req, res) => {
     }
 
     const [deleteResult] = await global.db.query(
-      "DELETE FROM game_results WHERE pkResultId = ?",
-      [resultId]
+      "DELETE FROM game_results WHERE resultId = ?",
+      [resultId],
     );
 
     if (deleteResult.affectedRows === 0) {

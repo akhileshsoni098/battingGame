@@ -29,8 +29,8 @@ exports.registerUser = async (req, res) => {
     //
 
     const [check] = await global.db.query(
-      "SELECT mobileNumber FROM users WHERE mobileNumber = ?",
-      [mobileNumber]
+      "SELECT id FROM users WHERE mobileNumber = ?",
+      [mobileNumber],
     );
 
     if (check.length > 0) {
@@ -54,6 +54,17 @@ exports.registerUser = async (req, res) => {
         .status(500)
         .json({ status: false, message: "Failed to register user" });
     }
+
+    // wallet create automatically
+    const userId = result.insertId;
+
+    const [userWallet] = await global.db.query(
+      `INSERT INTO user_wallets (userId, depositBalance, bonusBalance, winningBalance)
+       VALUES (?,0,0,0)`,
+      [userId],
+    );
+
+    console.log("userWallet", userWallet);
 
     // logIn with id   userId = result.insertId
 
@@ -86,7 +97,7 @@ exports.logIn = async (req, res) => {
     }
 
     let [user] = await global.db.query(`
-        SELECT id, mobileNumber , password FROM users WHERE mobileNumber = ${mobileNumber}
+        SELECT id, password FROM users WHERE mobileNumber = ${mobileNumber}
         `);
 
     if (user.length == 0) {

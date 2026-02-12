@@ -2,17 +2,22 @@
 
 
 CREATE TABLE IF NOT EXISTS game_results (
-  pkResultId INT AUTO_INCREMENT PRIMARY KEY,
+  resultId INT AUTO_INCREMENT PRIMARY KEY,
   gameId INT NOT NULL,
   gameDate DATE NOT NULL,
   result VARCHAR(255) NOT NULL,
   previousResult VARCHAR(255),
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  CONSTRAINT uq_game_date UNIQUE (gameId, gameDate),
+
   FOREIGN KEY (gameId) REFERENCES games(id)
     ON DELETE CASCADE
     ON UPDATE CASCADE
- 
-CONSTRAINT uq_game_date UNIQUE (gameId, gameDate),
+
 
 );
+
+CREATE INDEX idx_results_game_date 
+ON game_results(gameId, gameDate);

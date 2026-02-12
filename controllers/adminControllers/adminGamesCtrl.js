@@ -69,6 +69,7 @@ exports.createGames = async (req, res) => {
   }
 };
 
+
 // will update soon
 exports.getAllGames = async (req, res) => {
   try {
@@ -78,6 +79,161 @@ exports.getAllGames = async (req, res) => {
     return res.status(500).json({ status: false, message: err.message });
   }
 };
+
+// get game details single
+
+exports.getGameDetails = async (req, res) => {
+  try {
+    let gameId = Number(req.params.gameId);
+
+    if (!gameId || isNaN(gameId)) {
+      return res.status(400).json({
+        status: false,
+        message: "please provide valid game id",
+      });
+    }
+
+    const [rows] = await global.db.query(
+      `
+SELECT 
+
+-- GAME MASTER
+g.id AS pkGameId,
+g.gameCode AS gameId,
+g.gameName,
+g.gameIcon,
+g.description AS gameDescription,
+g.holiday,
+g.isActive,
+g.isMaster,
+g.masterId AS fkMasterId,
+
+-- TIMINGS
+gt.startTime,
+gt.endTime,
+gt.resultTime,
+gt.startDayDiff,
+gt.endDayDiff,
+
+-- TODAY STATE
+gs.showInLive,
+gs.showInPending,
+gs.showInDeclared,
+gs.showInUpcoming,
+gs.gameDate,
+gs.gameState,
+
+-- TODAY RESULT
+gr.result AS gameResultToday,
+
+-- YESTERDAY RESULT
+(
+ SELECT result 
+ FROM game_results 
+ WHERE gameId = g.id
+ AND gameDate < CURDATE()
+ ORDER BY gameDate DESC
+ LIMIT 1
+) AS gameResultYesterday,
+
+-- CURRENT RESULT
+gr.gameDate AS currentGameDate,
+gr.result AS currentResult,
+
+(
+ SELECT result
+ FROM game_results
+ WHERE gameId = g.id
+ AND gameDate < CURDATE()
+ ORDER BY gameDate DESC
+ LIMIT 1
+) AS currentPreviousResult,
+
+-- DECLARED RESULT (latest)
+(
+ SELECT gameDate
+ FROM game_results
+ WHERE gameId = g.id
+ ORDER BY gameDate DESC
+ LIMIT 1
+) AS declaredGameDate,
+
+(
+ SELECT result
+ FROM game_results
+ WHERE gameId = g.id
+ ORDER BY gameDate DESC
+ LIMIT 1
+) AS declaredResult,
+
+(
+ SELECT result
+ FROM game_results
+ WHERE gameId = g.id
+ ORDER BY gameDate DESC
+ LIMIT 1 OFFSET 1
+) AS declaredPreviousResult,
+
+-- UPCOMING (from calendar)
+(
+ SELECT gameDate
+ FROM game_calendar
+ WHERE gameId = g.id
+ AND gameDate > CURDATE()
+ ORDER BY gameDate ASC
+ LIMIT 1
+) AS upcomingGameDate,
+
+(
+ SELECT result
+ FROM game_results
+ WHERE gameId = g.id
+ ORDER BY gameDate DESC
+ LIMIT 1
+) AS upcomingPreviousResult
+
+FROM games g
+
+LEFT JOIN game_timings gt 
+ON gt.gameId = g.id
+
+LEFT JOIN game_states gs
+ON gs.gameId = g.id
+AND gs.gameDate = CURDATE()
+
+LEFT JOIN game_results gr
+ON gr.gameId = g.id
+AND gr.gameDate = CURDATE()
+
+WHERE g.id = ?
+`,
+      [gameId]
+    );
+
+    if (!rows.length) {
+      return res.status(404).json({
+        status: false,
+        message: "game not found",
+      });
+    }
+
+    // convert undefined → null
+    const data = Object.fromEntries(
+      Object.entries(rows[0]).map(([k, v]) => [k, v ?? null])
+    );
+
+    return res.status(200).json({
+      status: true,
+      data,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      status: false,
+      message: err.message,
+    });
+  }
+};
+
 
 // update game
 
@@ -184,11 +340,11 @@ exports.deleteGame = async (req, res) => {
       "DELETE FROM games WHERE id = ?",
       [gameId],
     );
-
+ 
     if (deleteGame.affectedRows == 0) {
       return res.status(404).json({ status: false, message: "game not found" });
     }
-
+ 
     return res
       .status(200)
       .json({ status: false, message: "Game deleted successfuly" });

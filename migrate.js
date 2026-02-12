@@ -12,6 +12,11 @@ const MIGRATIONS = [
   "admin/05game_timing.sql",
   "admin/06gamestates.sql",
   "admin/07gameCalender.sql",
+  "admin/08gameResult.sql",
+  "users/09userWallet.sql",
+  "users/10userTransaction.sql",
+  "users/11userDeposits.sql",
+  "users/12userWithdrawals.sql",
 ];
 
 async function runMigrations() {

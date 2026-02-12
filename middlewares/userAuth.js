@@ -21,6 +21,7 @@ exports.userAuthentication = async (req, res, next) => {
 
       userData = userData[0];
 
+      console.log(userData);
       req.user = {
         _id: userData.id,
         fullName: userData.fullName,

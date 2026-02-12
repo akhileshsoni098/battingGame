@@ -16,3 +16,6 @@ CREATE TABLE IF NOT EXISTS game_calendar (
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
+
+CREATE INDEX idx_calendar_game_date 
+ON game_calendar(gameId, gameDate);

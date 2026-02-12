@@ -1,0 +1,41 @@
+/* 
+deposits
+-------------------------
+pkDepositId (BIGINT PK)
+fkUserId (BIGINT)
+
+amount (DECIMAL 12,2)
+
+gateway (VARCHAR)
+gatewayTxnId (VARCHAR UNIQUE)
+
+status (ENUM)
+
+createdAt
+updatedAt
+
+INDEX (fkUserId)
+
+status:
+PENDING
+SUCCESS
+FAILED
+REFUNDED
+
+
+ */
+
+CREATE TABLE IF NOT EXISTS deposits (
+  depositId BIGINT AUTO_INCREMENT PRIMARY KEY,
+  userId BIGINT,
+  amount DECIMAL(12,2),
+  gateway VARCHAR(255),
+  gatewayTxnId VARCHAR(255) UNIQUE,
+  status ENUM('PENDING', 'SUCCESS', 'FAILED', 'REFUNDED'),
+  createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  
+  FOREIGN KEY (userId) REFERENCES users(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
